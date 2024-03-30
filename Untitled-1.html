@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Application Form</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, violet, indigo, blue);
+    color: #fff;
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+}
+
+.success-message {
+    color: green;
+    font-size: 0.9em;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Job Application Form</h2>
+    <form id="jobApplicationForm" novalidate>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <span class="error-message" id="nameError"></span>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <span class="error-message" id="emailError"></span>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
+            <span class="error-message" id="phoneError"></span>
+        </div>
+        <div class="form-group">
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" rows="3" required></textarea>
+            <span class="error-message" id="addressError"></span>
+        </div>
+        <div class="form-group">
+            <label for="resume">Resume Upload:</label>
+            <input type="file" id="resume" name="resume" accept=".pdf,.docx" required>
+            <span class="error-message" id="resumeError"></span>
+        </div>
+        <button type="submit" id="submitBtn" disabled>Submit</button>
+    </form>
+</div>
+
+<script>
+// Function to validate name field
+function validateName() {
+    const nameInput = document.getElementById('name');
+    const nameError = document.getElementById('nameError');
+    const namePattern = /^[a-zA-Z\s]*$/;
+
+    if (!nameInput.value.trim()) {
+        nameError.textContent = 'Name is required';
+        return false;
+    } else if (!namePattern.test(nameInput.value)) {
+        nameError.textContent = 'Name should contain only letters';
+        return false;
+    } else {
+        nameError.textContent = '';
+        return true;
+    }
+}
+
+// Function to validate email field
+function validateEmail() {
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('emailError');
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailInput.value.trim()) {
+        emailError.textContent = 'Email is required';
+        return false;
+    } else if (!emailPattern.test(emailInput.value)) {
+        emailError.textContent = 'Invalid email format';
+        return false;
+    } else {
+        emailError.textContent = '';
+        return true;
+    }
+}
+
+// Function to validate phone number field
+function validatePhone() {
+    const phoneInput = document.getElementById('phone');
+    const phoneError = document.getElementById('phoneError');
+    const phonePattern = /^\d{3}-\d{3}-\d{4}$/;
+
+    if (!phoneInput.value.trim()) {
+        phoneError.textContent = 'Phone number is required';
+        return false;
+    } else if (!phonePattern.test(phoneInput.value)) {
+        phoneError.textContent = 'Invalid phone number format (*****-*****-XXXX)';
+        return false;
+    } else {
+        phoneError.textContent = '';
+        return true;
+    }
+}
+
+// Function to validate address field
+function validateAddress() {
+    const addressInput = document.getElementById('address');
+    const addressError = document.getElementById('addressError');
+
+    if (!addressInput.value.trim()) {
+        addressError.textContent = 'Address is required';
+        return false;
+    } else if (addressInput.value.trim().length < 10) {
+        addressError.textContent = 'Address must be at least 10 characters';
+        return false;
+    } else {
+        addressError.textContent = '';
+        return true;
+    }
+}
+
+// Function to validate resume upload field
+function validateResume() {
+    const resumeInput = document.getElementById('resume');
+    const resumeError = document.getElementById('resumeError');
+    const maxFileSize = 5 * 1024 * 1024; // 5 MB
+
+    if (!resumeInput.value) {
+        resumeError.textContent = 'Resume upload is required';
+        return false;
+    } else if (!['application/pdf', 'application/msword'].includes(resumeInput.files[0].type)) {
+        resumeError.textContent = 'Invalid file format (PDF or DOCX only)';
+        return false;
+    } else if (resumeInput.files[0].size > maxFileSize) {
+        resumeError.textContent = 'File size exceeds 5 MB limit';
+        return false;
+    } else {
+        resumeError.textContent = '';
+        return true;
+    }
+}
+
+// Function to handle form submission
+function handleSubmit(event) {
+    event.preventDefault();
+
+    if (validateName() && validateEmail() && validatePhone() && validateAddress() && validateResume()) {
+        alert('Form submitted successfully');
+    }
+}
+
+// Add event listeners for input fields
+document.getElementById('name').addEventListener('input', validateName);
+document.getElementById('email').addEventListener('input', validateEmail);
+document.getElementById('phone').addEventListener('input', validatePhone);
+document.getElementById('address').addEventListener('input', validateAddress);
+document.getElementById('resume').addEventListener('change', validateResume);
+
+// Add event listener for form submission
+document.getElementById('jobApplicationForm').addEventListener('submit', handleSubmit);
+
+// Enable submit button only if all fields are valid
+document.addEventListener('input', function() {
+    const isValid = validateName() && validateEmail() && validatePhone() && validateAddress() && validateResume();
+    document.getElementById('submitBtn').disabled = !isValid;
+});
+</script>
+
+</body>
+</html>
